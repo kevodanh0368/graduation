@@ -4,7 +4,7 @@ export function HeroTitleSection() {
   return (
     <section
       id="trang-chu"
-      className="relative mx-auto max-w-[1040px] px-4 pt-5 pb-3 sm:px-6 sm:pt-12 sm:pb-8 overflow-hidden"
+      className="relative mx-auto w-full max-w-[900px] px-4 pt-[clamp(1.25rem,4vh,3rem)] pb-[clamp(0.75rem,2vh,1.75rem)] sm:px-6 lg:px-8 overflow-hidden"
     >
       {/* Lớp quét Radar hàng không (SVG circular gradient xoay nhẹ toàn vùng Hero) */}
       <div
@@ -13,7 +13,7 @@ export function HeroTitleSection() {
       >
         <svg
           viewBox="0 0 600 600"
-          className="h-[520px] w-[520px] sm:h-[760px] sm:w-[760px] max-w-none"
+          className="h-[min(92vw,500px)] w-[min(92vw,500px)] sm:h-[640px] sm:w-[640px] max-w-none"
         >
           <defs>
             <radialGradient id="hero-radar-glow" cx="50%" cy="50%" r="50%">
@@ -92,13 +92,13 @@ export function HeroTitleSection() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          className="relative md:col-span-8 flex flex-col items-center md:items-start text-center md:text-left md:pl-8"
+          className="relative md:col-span-8 flex flex-col items-center md:items-start text-center md:text-left md:pl-6"
         >
           {/* Vòng quỹ đạo nghiêng bao quanh chữ KỶ YẾU */}
           <svg
             aria-hidden="true"
             viewBox="0 0 520 190"
-            className="pointer-events-none absolute -top-3 left-1/2 -translate-x-1/2 md:translate-x-0 md:-left-4 md:-top-6 h-[135px] w-[300px] sm:h-[200px] sm:w-[480px] animate-orbit-drift opacity-90"
+            className="pointer-events-none absolute -top-3 left-1/2 -translate-x-1/2 md:translate-x-0 md:-left-4 md:-top-5 w-[min(84vw,430px)] h-auto animate-orbit-drift opacity-90"
           >
             <defs>
               <linearGradient id="title-orbit" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -125,17 +125,17 @@ export function HeroTitleSection() {
           </svg>
 
           {/* CHỈNH DÒNG TIÊU ĐỀ NHỎ TẠI ĐÂY */}
-          <p className="relative z-10 font-[family-name:var(--font-display)] text-xs sm:text-base font-semibold tracking-[0.28em] text-sky-100/90 uppercase">
+          <p className="relative z-10 font-[family-name:var(--font-display)] text-[clamp(0.75rem,1.4vw,1rem)] font-semibold tracking-[0.28em] text-sky-100/90 uppercase">
             THIỆP MỜI
           </p>
 
           {/* CHỈNH TIÊU ĐỀ CHÍNH KỶ YẾU TẠI ĐÂY */}
-          <h1 className="relative z-10 mt-0.5 sm:mt-1 font-[family-name:var(--font-display)] text-4xl sm:text-6xl lg:text-[4.25rem] font-extrabold italic tracking-wide bg-gradient-to-b from-white via-sky-100 to-sky-300 bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(96,165,250,0.45)]">
+          <h1 className="relative z-10 mt-0.5 sm:mt-1 font-[family-name:var(--font-display)] text-[clamp(2.35rem,6.2vw,4.1rem)] leading-[1.06] font-extrabold italic tracking-wide bg-gradient-to-b from-white via-sky-100 to-sky-300 bg-clip-text text-transparent drop-shadow-[0_0_24px_rgba(96,165,250,0.45)]">
             KỶ YẾU
           </h1>
 
           {/* CHỈNH CÂU TRÍCH DẪN VIẾT TAY TẠI ĐÂY */}
-          <p className="relative z-10 mt-2.5 sm:mt-3 font-[family-name:var(--font-script)] text-xl sm:text-[1.75rem] leading-snug text-slate-100/95 sm:-rotate-2">
+          <p className="relative z-10 mt-2.5 sm:mt-3 font-[family-name:var(--font-script)] text-[clamp(1.2rem,2.4vw,1.75rem)] leading-snug text-slate-100/95 sm:-rotate-2">
             “Thanh xuân ấy,
             <br />
             chúng ta đã cùng nhau viết nên...”
@@ -151,7 +151,7 @@ export function HeroTitleSection() {
         >
           <div className="text-center md:text-right sm:-rotate-3">
             {/* CHỈNH DÒNG CHỮ GÓC PHẢI TẠI ĐÂY */}
-            <p className="font-[family-name:var(--font-script)] text-lg sm:text-[1.85rem] leading-tight text-slate-200/85">
+            <p className="font-[family-name:var(--font-script)] text-[clamp(1.1rem,2.3vw,1.75rem)] leading-tight text-slate-200/85">
               See you{' '}
               <br className="hidden md:inline" />
               at our last chapter <span aria-hidden="true">♡</span>
@@ -159,7 +159,7 @@ export function HeroTitleSection() {
             <svg
               aria-hidden="true"
               viewBox="0 0 220 18"
-              className="mx-auto md:ml-auto md:mr-0 mt-1 h-2.5 sm:h-3.5 w-36 sm:w-48 text-sky-200/65"
+              className="mx-auto md:ml-auto md:mr-0 mt-1 h-2.5 sm:h-3.5 w-36 sm:w-44 text-sky-200/65"
             >
               <path
                 d="M 6 12 Q 110 2 214 8"

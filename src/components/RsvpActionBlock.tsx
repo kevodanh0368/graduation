@@ -72,7 +72,7 @@ export function RsvpActionBlock({ invitation }: RsvpActionBlockProps) {
     : publicSubmitted;
 
   return (
-    <section id="xac-nhan" className="mx-auto max-w-[920px] px-4 pt-5 pb-8 sm:px-6">
+    <section id="xac-nhan" className="mx-auto w-full max-w-[900px] px-4 pt-4 pb-8 sm:px-6 lg:px-8">
       {/* Nút Xác nhận tham dự hình lục giác phát sáng */}
       <div className="flex flex-col items-center">
         <div className="flex w-full max-w-md items-center justify-center gap-4">
@@ -82,7 +82,7 @@ export function RsvpActionBlock({ invitation }: RsvpActionBlockProps) {
             onClick={() => setFormOpen((prev) => !prev)}
             className="group hud-chamfer-pill bg-gradient-to-r from-sky-200 via-blue-400 to-sky-200 p-[1.5px] shadow-[0_0_26px_rgba(96,165,250,0.45)] transition-transform duration-150 hover:scale-[1.02] active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300"
           >
-            <span className="hud-chamfer-pill-inner flex min-h-[48px] items-center justify-center gap-3 bg-[#091D48] px-8 py-2.5 text-sm sm:text-base font-semibold text-white group-hover:bg-[#0D2760] transition-colors whitespace-nowrap">
+            <span className="hud-chamfer-pill-inner flex min-h-[48px] items-center justify-center gap-3 bg-[#091D48] px-7 sm:px-8 py-2.5 text-sm sm:text-base font-semibold text-white group-hover:bg-[#0D2760] transition-colors whitespace-nowrap">
               <CheckCircle2 className="h-5 w-5 text-sky-200" />
               <span>
                 {confirmedData ? 'Đã gửi phản hồi' : 'Xác nhận tham dự'}
@@ -96,7 +96,7 @@ export function RsvpActionBlock({ invitation }: RsvpActionBlockProps) {
         {/* CHỈNH DÒNG HẸN GẶP BẠN TẠI ĐÂY */}
         <div className="mt-4 flex w-full max-w-md items-center justify-center gap-3">
           <span className="h-px flex-1 bg-gradient-to-r from-transparent to-sky-300/35" />
-          <p className="text-xs sm:text-sm italic text-slate-200/90 whitespace-nowrap">
+          <p className="text-center text-xs sm:text-sm italic text-slate-200/90 px-1">
             Hẹn gặp bạn tại buổi kỷ yếu của mình nhé! <span aria-hidden="true">♡</span>
           </p>
           <span className="h-px flex-1 bg-gradient-to-l from-transparent to-sky-300/35" />
@@ -221,9 +221,9 @@ export function RsvpActionBlock({ invitation }: RsvpActionBlockProps) {
       )}
 
       {/* Chữ viết tay góc dưới trái giống mẫu (Tự chỉnh chữ HTML tại đây) */}
-      <div className="mt-8 sm:mt-10 flex justify-start pl-2 sm:pl-4">
+      <div className="mt-8 sm:mt-10 flex justify-start pl-1 sm:pl-2">
         <div className="-rotate-2 sm:-rotate-3">
-          <p className="font-[family-name:var(--font-script)] text-xl sm:text-[1.8rem] leading-tight text-slate-100/90">
+          <p className="font-[family-name:var(--font-script)] text-[clamp(1.2rem,2.4vw,1.75rem)] leading-tight text-slate-100/90">
             Cùng nhau,
             <br />
             đến hết thanh xuân.

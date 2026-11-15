@@ -8,6 +8,7 @@ import { InfoCardsGrid } from './components/InfoCardsGrid';
 import { InvitationBox } from './components/InvitationBox';
 import { NavbarHud } from './components/NavbarHud';
 import { RsvpActionBlock } from './components/RsvpActionBlock';
+import { ScrollCueHud } from './components/ScrollCueHud';
 import { SpaceHudBackdrop } from './components/SpaceHudBackdrop';
 import {
   auth,
@@ -186,7 +187,10 @@ export default function App() {
               loadingInvite={loadingInvite}
             />
 
-            {/* Phần 3: 3 ô thông tin Thời gian · Địa điểm · Lịch trình dự kiến */}
+            {/* Gợi ý kéo xuống để xác nhận tham dự */}
+            <ScrollCueHud />
+
+            {/* Phần 3: 4 ô thông tin Thời gian · Địa điểm · Lịch trình · Liên hệ */}
             <InfoCardsGrid settings={settings} invitation={invitation} />
 
             {/* Phần 4: Đồng hồ đếm ngược đến ngày kỷ yếu */}

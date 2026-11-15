@@ -23,7 +23,7 @@ export function InvitationBox({
   return (
     <section
       id="thu-moi"
-      className="mx-auto max-w-[820px] px-4 py-4 sm:px-6"
+      className="mx-auto w-full max-w-[900px] px-4 py-[clamp(0.5rem,1.8vh,1.25rem)] sm:px-6 lg:px-8"
     >
       <motion.div
         initial={{ opacity: 0, y: 14 }}
@@ -43,7 +43,7 @@ export function InvitationBox({
 
         {/* Viền phát sáng vát góc bát giác (Chamfered HUD Border) */}
         <div className="hud-chamfer-lg bg-gradient-to-br from-sky-200/80 via-blue-400/35 to-sky-300/80 p-[1.5px]">
-          <div className="hud-chamfer-lg-inner relative bg-[#06122E]/90 px-5 py-6 sm:px-12 sm:py-10 backdrop-blur-md">
+          <div className="hud-chamfer-lg-inner relative bg-[#06122E]/90 px-[clamp(1.125rem,4vw,3rem)] py-[clamp(1.35rem,3.5vw,2.5rem)] backdrop-blur-md">
             {/* Lưới mờ bên trong khung Thư mời */}
             <div
               aria-hidden="true"
@@ -61,16 +61,16 @@ export function InvitationBox({
               </div>
 
               {/* CHỈNH DÒNG LỜI MỞ ĐẦU TẠI ĐÂY */}
-              <p className="mt-4 sm:mt-5 text-sm sm:text-lg font-medium text-slate-100">
+              <p className="mt-4 sm:mt-5 text-[clamp(0.9rem,1.8vw,1.125rem)] font-medium text-slate-100">
                 {loadingInvite ? 'Đang tải thiệp mời...' : salutationText}
               </p>
 
               {/* Ô HIỂN THỊ TÊN NGƯỜI ĐƯỢC MỜI (Chỉ đọc — Tên lấy tự động từ link riêng /moi/<id> hoặc ?guest=<id>) */}
-              <div className="mt-3 sm:mt-4 w-full max-w-[520px]">
+              <div className="mt-3 sm:mt-4 w-full max-w-[540px]">
                 <div className="hud-chamfer-pill bg-gradient-to-r from-sky-300/75 via-blue-400/50 to-sky-300/75 p-[1.5px] shadow-[0_0_24px_rgba(56,189,248,0.22)]">
-                  <div className="hud-chamfer-pill-inner flex min-h-[46px] sm:min-h-[54px] items-center justify-center gap-2.5 sm:gap-3 bg-[#081A40]/95 px-4 sm:px-6 py-2">
+                  <div className="hud-chamfer-pill-inner flex min-h-[46px] sm:min-h-[54px] items-center justify-center gap-2.5 sm:gap-3 bg-[#081A40]/95 px-5 sm:px-7 py-2">
                     <User className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 text-sky-300" />
-                    <div className="text-center font-[family-name:var(--font-display)] font-bold text-base sm:text-xl tracking-wide text-white">
+                    <div className="min-w-0 text-center font-[family-name:var(--font-display)] font-bold text-[clamp(1rem,2.2vw,1.3rem)] tracking-wide text-white break-words">
                       {loadingInvite ? (
                         <span className="text-sm font-medium text-sky-200/80">
                           Đang tải tên khách mời...

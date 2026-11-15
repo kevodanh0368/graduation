@@ -13,7 +13,7 @@ export function FooterHud({
 }: FooterHudProps) {
   return (
     <footer className="relative z-10 py-8">
-      <div className="mx-auto max-w-[1040px] px-4 sm:px-6">
+      <div className="mx-auto w-full max-w-[900px] px-4 sm:px-6 lg:px-8">
         {/* CHỈNH DÒNG CHÂN TRANG TẠI ĐÂY */}
         <div className="mx-auto flex max-w-md items-center justify-center gap-4 text-xs sm:text-sm text-slate-300">
           <span className="h-px flex-1 bg-gradient-to-r from-transparent to-sky-300/45" />
