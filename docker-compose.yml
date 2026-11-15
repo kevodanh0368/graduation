@@ -1,0 +1,22 @@
+services:
+  ky-yeu-2026:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ky-yeu-mai-trung-tu-2026
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - TZ=Asia/Ho_Chi_Minh
+    # Optional persistent volume for local custom assets or nginx logs on Proxmox host
+    volumes:
+      - ./homelab-logs:/var/log/nginx
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.50"

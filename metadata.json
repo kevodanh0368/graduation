@@ -1,0 +1,6 @@
+{
+  "name": "Thiệp Mời Kỷ Yếu 29/11/2026",
+  "description": "Trang web thiệp mời kỷ yếu ngày 29/11/2026 cho phép quản trị viên tùy chỉnh tên khách mời, thời gian trên thiệp và khách mời xác nhận tham dự trực tiếp.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

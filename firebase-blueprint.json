@@ -1,0 +1,263 @@
+{
+  "entities": {
+    "EventSettings": {
+      "title": "EventSettings",
+      "description": "Global yearbook invitation metadata, default time, venue, dress code, custom invitation photo URLs, and day schedule configured by the admin.",
+      "type": "object",
+      "properties": {
+        "eventTitle": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Main title of the yearbook ceremony."
+        },
+        "classLabel": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Class, cohort, or developer handle displayed on the invitation."
+        },
+        "eventDate": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "maxLength": 20,
+          "description": "ISO date of the event (2026-11-29)."
+        },
+        "defaultTime": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Default invitation time printed on cards."
+        },
+        "defaultVenue": {
+          "type": "string",
+          "maxLength": 160,
+          "description": "Primary venue name."
+        },
+        "venueAddress": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Street address of the venue."
+        },
+        "dressCode": {
+          "type": "string",
+          "maxLength": 140,
+          "description": "Recommended attire for guests."
+        },
+        "hostMessage": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Opening editorial note from the host."
+        },
+        "heroImageUrl": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Optional custom URL for the primary hero invitation photo."
+        },
+        "secondaryImageUrl": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Optional custom URL for the secondary gallery photo."
+        },
+        "scheduleItems": {
+          "type": "array",
+          "description": "Ordered timeline blocks for 29/11/2026 (max 8 items)."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last admin update."
+        },
+        "updatedBy": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "UID of the admin who last updated settings."
+        }
+      },
+      "required": [
+        "eventTitle",
+        "classLabel",
+        "eventDate",
+        "defaultTime",
+        "defaultVenue",
+        "venueAddress",
+        "dressCode",
+        "hostMessage",
+        "heroImageUrl",
+        "secondaryImageUrl",
+        "scheduleItems",
+        "updatedAt",
+        "updatedBy"
+      ]
+    },
+    "Invitation": {
+      "title": "Invitation",
+      "description": "Personalized yearbook invitation card created by an admin with custom guest name, invitation time, and direct guest RSVP state.",
+      "type": "object",
+      "properties": {
+        "guestName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "Custom display name of the invited guest."
+        },
+        "salutation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "description": "Formal or warm greeting prefix printed before the guest name."
+        },
+        "groupLabel": {
+          "type": "string",
+          "maxLength": 60,
+          "description": "Guest category such as Ban be, Thay Co, Dong nghiep, Gia dinh."
+        },
+        "customTime": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Custom invitation time printed on this guest's card."
+        },
+        "customVenue": {
+          "type": "string",
+          "maxLength": 160,
+          "description": "Optional venue override for this guest."
+        },
+        "personalNote": {
+          "type": "string",
+          "maxLength": 400,
+          "description": "Personal invitation message written by the admin for this guest."
+        },
+        "rsvpStatus": {
+          "type": "string",
+          "enum": ["pending", "attending", "declined"],
+          "description": "Current attendance confirmation state."
+        },
+        "companionCount": {
+          "type": "integer",
+          "description": "Number of additional companions accompanying the guest (0 to 5)."
+        },
+        "guestMessage": {
+          "type": "string",
+          "maxLength": 400,
+          "description": "Wishes or confirmation note submitted by the guest."
+        },
+        "respondedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the guest confirmed attendance, or null."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when the invitation was created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of the latest update."
+        },
+        "createdBy": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "UID of the admin who created the invitation."
+        }
+      },
+      "required": [
+        "guestName",
+        "salutation",
+        "groupLabel",
+        "customTime",
+        "customVenue",
+        "personalNote",
+        "rsvpStatus",
+        "companionCount",
+        "guestMessage",
+        "respondedAt",
+        "createdAt",
+        "updatedAt",
+        "createdBy"
+      ]
+    },
+    "PublicRsvp": {
+      "title": "PublicRsvp",
+      "description": "Direct RSVP submission from a general visitor arriving without a personalized invitation link.",
+      "type": "object",
+      "properties": {
+        "guestName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "Full name entered by the confirming guest."
+        },
+        "groupLabel": {
+          "type": "string",
+          "maxLength": 60,
+          "description": "Relationship or group (Ban be, Dong nghiep, Thay Co, Nguoi than)."
+        },
+        "rsvpStatus": {
+          "type": "string",
+          "enum": ["attending", "declined"],
+          "description": "Attendance choice."
+        },
+        "companionCount": {
+          "type": "integer",
+          "description": "Number of companions (0 to 5)."
+        },
+        "guestMessage": {
+          "type": "string",
+          "maxLength": 400,
+          "description": "Yearbook wish or note left by the guest."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of submission."
+        }
+      },
+      "required": [
+        "guestName",
+        "groupLabel",
+        "rsvpStatus",
+        "companionCount",
+        "guestMessage",
+        "createdAt"
+      ]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Trusted co-admin record authorized to manage invitations and event settings.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "addedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["email", "displayName", "addedAt"]
+    }
+  },
+  "firestore": {
+    "/eventSettings/{settingId}": {
+      "schema": { "$ref": "#/entities/EventSettings" },
+      "description": "Stores the global yearbook ceremony settings at /eventSettings/main."
+    },
+    "/invitations/{inviteId}": {
+      "schema": { "$ref": "#/entities/Invitation" },
+      "description": "Stores personalized guest invitations created by admin and confirmed directly by guests."
+    },
+    "/publicRsvps/{rsvpId}": {
+      "schema": { "$ref": "#/entities/PublicRsvp" },
+      "description": "Stores direct RSVPs submitted from the general landing page."
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Stores additional authorized admin UIDs managed by the primary owner."
+    }
+  }
+}

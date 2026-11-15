@@ -1,0 +1,206 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net: Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Reusable Hardened Helpers ---
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUser() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwnerAdmin() {
+      return isVerifiedUser() && request.auth.token.email == 'rt.cipher0368@gmail.com';
+    }
+
+    function isAdmin() {
+      return isOwnerAdmin() || (isVerifiedUser() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)));
+    }
+
+    // --- Validation Blueprints ---
+    function isValidScheduleItem(item) {
+      return item is map &&
+        item.keys().hasAll(['time', 'title', 'detail']) &&
+        item.keys().hasOnly(['time', 'title', 'detail']) &&
+        item.time is string && item.time.size() >= 1 && item.time.size() <= 40 &&
+        item.title is string && item.title.size() >= 1 && item.title.size() <= 80 &&
+        item.detail is string && item.detail.size() <= 200;
+    }
+
+    function isValidEventSettings(data) {
+      return data.keys().hasAll([
+          'eventTitle', 'classLabel', 'eventDate', 'defaultTime',
+          'defaultVenue', 'venueAddress', 'dressCode', 'hostMessage',
+          'heroImageUrl', 'secondaryImageUrl',
+          'scheduleItems', 'updatedAt', 'updatedBy'
+        ]) &&
+        data.keys().hasOnly([
+          'eventTitle', 'classLabel', 'eventDate', 'defaultTime',
+          'defaultVenue', 'venueAddress', 'dressCode', 'hostMessage',
+          'heroImageUrl', 'secondaryImageUrl',
+          'scheduleItems', 'updatedAt', 'updatedBy'
+        ]) &&
+        data.eventTitle is string && data.eventTitle.size() >= 1 && data.eventTitle.size() <= 100 &&
+        data.classLabel is string && data.classLabel.size() >= 1 && data.classLabel.size() <= 100 &&
+        data.eventDate is string && data.eventDate.size() == 10 && data.eventDate.matches('^\\d{4}-\\d{2}-\\d{2}$') &&
+        data.defaultTime is string && data.defaultTime.size() >= 1 && data.defaultTime.size() <= 100 &&
+        data.defaultVenue is string && data.defaultVenue.size() >= 1 && data.defaultVenue.size() <= 160 &&
+        data.venueAddress is string && data.venueAddress.size() <= 200 &&
+        data.dressCode is string && data.dressCode.size() <= 140 &&
+        data.hostMessage is string && data.hostMessage.size() <= 500 &&
+        data.heroImageUrl is string && data.heroImageUrl.size() <= 500 &&
+        data.secondaryImageUrl is string && data.secondaryImageUrl.size() <= 500 &&
+        data.scheduleItems is list && data.scheduleItems.size() <= 8 &&
+        (data.scheduleItems.size() == 0 || isValidScheduleItem(data.scheduleItems[0])) &&
+        data.updatedAt is timestamp &&
+        data.updatedBy is string && data.updatedBy.size() >= 1 && data.updatedBy.size() <= 128;
+    }
+
+    function isValidInvitation(data) {
+      return data.keys().hasAll([
+          'guestName', 'salutation', 'groupLabel', 'customTime',
+          'customVenue', 'personalNote', 'rsvpStatus', 'companionCount',
+          'guestMessage', 'respondedAt', 'createdAt', 'updatedAt', 'createdBy'
+        ]) &&
+        data.keys().hasOnly([
+          'guestName', 'salutation', 'groupLabel', 'customTime',
+          'customVenue', 'personalNote', 'rsvpStatus', 'companionCount',
+          'guestMessage', 'respondedAt', 'createdAt', 'updatedAt', 'createdBy'
+        ]) &&
+        data.guestName is string && data.guestName.size() >= 1 && data.guestName.size() <= 80 &&
+        data.salutation is string && data.salutation.size() >= 1 && data.salutation.size() <= 50 &&
+        data.groupLabel is string && data.groupLabel.size() <= 60 &&
+        data.customTime is string && data.customTime.size() >= 1 && data.customTime.size() <= 100 &&
+        data.customVenue is string && data.customVenue.size() <= 160 &&
+        data.personalNote is string && data.personalNote.size() <= 400 &&
+        data.rsvpStatus in ['pending', 'attending', 'declined'] &&
+        data.companionCount is int && data.companionCount >= 0 && data.companionCount <= 5 &&
+        data.guestMessage is string && data.guestMessage.size() <= 400 &&
+        (data.respondedAt == null || data.respondedAt is timestamp) &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp &&
+        data.createdBy is string && data.createdBy.size() >= 1 && data.createdBy.size() <= 128;
+    }
+
+    function isValidPublicRsvp(data) {
+      return data.keys().hasAll([
+          'guestName', 'groupLabel', 'rsvpStatus', 'companionCount',
+          'guestMessage', 'createdAt'
+        ]) &&
+        data.keys().hasOnly([
+          'guestName', 'groupLabel', 'rsvpStatus', 'companionCount',
+          'guestMessage', 'createdAt'
+        ]) &&
+        data.guestName is string && data.guestName.size() >= 1 && data.guestName.size() <= 80 &&
+        data.groupLabel is string && data.groupLabel.size() <= 60 &&
+        data.rsvpStatus in ['attending', 'declined'] &&
+        data.companionCount is int && data.companionCount >= 0 && data.companionCount <= 5 &&
+        data.guestMessage is string && data.guestMessage.size() <= 400 &&
+        data.createdAt is timestamp;
+    }
+
+    function isValidAdminUser(data) {
+      return data.keys().hasAll(['email', 'displayName', 'addedAt']) &&
+        data.keys().hasOnly(['email', 'displayName', 'addedAt']) &&
+        data.email is string && data.email.size() >= 3 && data.email.size() <= 120 &&
+        data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 80 &&
+        data.addedAt is timestamp;
+    }
+
+    // --- Collection Rules ---
+
+    match /admins/{adminId} {
+      allow get: if isValidId(adminId) && (isOwnerAdmin() || (isVerifiedUser() && request.auth.uid == adminId));
+      allow list: if isAdmin();
+      allow create: if isOwnerAdmin() && isValidId(adminId) && isValidAdminUser(incoming()) && incoming().addedAt == request.time;
+      allow update: if isOwnerAdmin() && isValidId(adminId) && isValidAdminUser(incoming()) && incoming().addedAt == existing().addedAt;
+      allow delete: if isOwnerAdmin() && isValidId(adminId);
+    }
+
+    match /eventSettings/{settingId} {
+      allow get: if isValidId(settingId) && settingId == 'main';
+      allow list: if isAdmin();
+      allow create: if isAdmin() && isValidId(settingId) && settingId == 'main' &&
+        isValidEventSettings(incoming()) &&
+        incoming().updatedAt == request.time &&
+        incoming().updatedBy == request.auth.uid;
+      allow update: if isAdmin() && isValidId(settingId) && settingId == 'main' &&
+        isValidEventSettings(incoming()) &&
+        incoming().updatedAt == request.time &&
+        incoming().updatedBy == request.auth.uid;
+      allow delete: if false;
+    }
+
+    match /invitations/{inviteId} {
+      allow get: if isValidId(inviteId);
+      allow list: if isAdmin();
+      allow create: if isAdmin() && isValidId(inviteId) &&
+        isValidInvitation(incoming()) &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        incoming().createdBy == request.auth.uid &&
+        (incoming().respondedAt == null || incoming().respondedAt == request.time);
+      allow update: if isValidId(inviteId) && isValidInvitation(incoming()) && (
+        (
+          isAdmin() &&
+          incoming().createdAt == existing().createdAt &&
+          incoming().createdBy == existing().createdBy &&
+          incoming().updatedAt == request.time &&
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'guestName', 'salutation', 'groupLabel', 'customTime',
+            'customVenue', 'personalNote', 'rsvpStatus', 'companionCount',
+            'guestMessage', 'respondedAt', 'updatedAt'
+          ])
+        ) ||
+        (
+          existing().rsvpStatus == 'pending' &&
+          incoming().rsvpStatus in ['attending', 'declined'] &&
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'rsvpStatus', 'companionCount', 'guestMessage', 'respondedAt', 'updatedAt'
+          ]) &&
+          incoming().updatedAt == request.time &&
+          incoming().respondedAt == request.time &&
+          incoming().createdAt == existing().createdAt &&
+          incoming().createdBy == existing().createdBy &&
+          incoming().guestName == existing().guestName &&
+          incoming().salutation == existing().salutation &&
+          incoming().groupLabel == existing().groupLabel &&
+          incoming().customTime == existing().customTime &&
+          incoming().customVenue == existing().customVenue &&
+          incoming().personalNote == existing().personalNote
+        )
+      );
+      allow delete: if isAdmin() && isValidId(inviteId);
+    }
+
+    match /publicRsvps/{rsvpId} {
+      allow get, list: if isAdmin();
+      allow create: if isValidId(rsvpId) &&
+        isValidPublicRsvp(incoming()) &&
+        incoming().createdAt == request.time;
+      allow update: if isAdmin() && isValidId(rsvpId) &&
+        isValidPublicRsvp(incoming()) &&
+        incoming().createdAt == existing().createdAt;
+      allow delete: if isAdmin() && isValidId(rsvpId);
+    }
+  }
+}
