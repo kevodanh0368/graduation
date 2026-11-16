@@ -1,5 +1,6 @@
 import { Calendar, Clock, MapPin, Phone } from 'lucide-react';
 import { motion } from 'motion/react';
+import { parseCountdownTarget } from '../lib/scheduleParser';
 import { type EventSettings, type Invitation } from '../types/invitation';
 
 interface InfoCardsGridProps {
@@ -10,6 +11,7 @@ interface InfoCardsGridProps {
 export function InfoCardsGrid({ settings, invitation }: InfoCardsGridProps) {
   const venueText = invitation?.customVenue || settings.defaultVenue || 'Sân trường THPT Quang Trung Đống Đa';
   const timeText = invitation?.customTime || settings.defaultTime || '14:00 – 17:00';
+  const target = parseCountdownTarget(invitation?.customTime, settings);
 
   return (
     <section
@@ -30,9 +32,9 @@ export function InfoCardsGrid({ settings, invitation }: InfoCardsGridProps) {
             <div>
               <p className="text-xs font-medium text-slate-300">Thời gian</p>
               <p className="mt-0.5 sm:mt-1 text-sm sm:text-base font-semibold text-white tabular-nums">
-                29/11/2026 <span className="sm:hidden text-xs font-normal text-slate-300">(Chủ Nhật)</span>
+                {target.formattedDate} <span className="sm:hidden text-xs font-normal text-slate-300">({target.weekdayLabel})</span>
               </p>
-              <p className="hidden sm:block mt-0.5 text-xs text-slate-300">(Chủ Nhật)</p>
+              <p className="hidden sm:block mt-0.5 text-xs text-slate-300">({target.weekdayLabel})</p>
             </div>
           </div>
         </div>

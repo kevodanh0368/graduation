@@ -31,6 +31,7 @@ import {
   subscribePublicRsvps,
   updateInvitationAdmin,
 } from '../lib/firebase';
+import { parseCountdownTarget } from '../lib/scheduleParser';
 import {
   FIELD_LIMITS,
   GROUP_PRESETS,
@@ -765,6 +766,14 @@ export function AdminPortal({
                 placeholder="08:00 — 09:30 · Chủ Nhật, 29/11/2026"
                 className="mt-1.5 w-full min-h-[42px] rounded-md border border-slate-700 bg-[#030712] px-3 py-2 font-mono text-sm text-emerald-300 focus:border-cyan-400 focus:outline-none"
               />
+              {(() => {
+                const preview = parseCountdownTarget(customTime, settings);
+                return (
+                  <p className="mt-1 font-mono text-[11px] text-slate-400 tabular-nums">
+                    Mốc đếm ngược: <span className="text-cyan-300">{preview.time24} · {preview.formattedDate}</span>
+                  </p>
+                );
+              })()}
             </div>
             <div>
               <label className="block font-mono text-xs font-medium text-slate-300">
@@ -1035,7 +1044,15 @@ export function AdminPortal({
                         </p>
                       </td>
                       <td className="py-3.5 px-4 align-top font-mono text-xs text-emerald-300 tabular-nums">
-                        {inv.customTime}
+                        <p>{inv.customTime}</p>
+                        {(() => {
+                          const target = parseCountdownTarget(inv.customTime, settings);
+                          return (
+                            <p className="mt-1 text-[11px] text-slate-400">
+                              Đếm ngược: {target.time24} · {target.formattedDate}
+                            </p>
+                          );
+                        })()}
                       </td>
                       <td className="py-3.5 px-4 align-top whitespace-nowrap">
                         <span

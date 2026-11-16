@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'motion/react';
+import { parseCountdownTarget } from '../lib/scheduleParser';
 import { type EventSettings, type Invitation } from '../types/invitation';
 
 interface CountdownHudProps {
@@ -13,14 +14,6 @@ interface TimeRemaining {
   minutes: number;
   seconds: number;
   expired: boolean;
-}
-
-function parseStartTime(timeStr: string): string {
-  const match = timeStr.match(/(\d{1,2})\s*[:hH]\s*(\d{2})?/);
-  if (!match) return '14:00:00';
-  const hh = Math.min(23, Math.max(0, Number(match[1]))).toString().padStart(2, '0');
-  const mm = Math.min(59, Math.max(0, Number(match[2] ?? '0'))).toString().padStart(2, '0');
-  return `${hh}:${mm}:00`;
 }
 
 function calculateRemaining(targetMs: number): TimeRemaining {
@@ -37,25 +30,22 @@ function calculateRemaining(targetMs: number): TimeRemaining {
 }
 
 export function CountdownHud({ settings, invitation }: CountdownHudProps) {
-  const targetTimestamp = useMemo(() => {
-    const datePart = settings.eventDate || '2026-11-29';
-    const timeSource = invitation?.customTime || settings.defaultTime || '14:00';
-    const timePart = parseStartTime(timeSource);
-    const parsed = Date.parse(`${datePart}T${timePart}+07:00`);
-    return Number.isNaN(parsed) ? Date.parse('2026-11-29T14:00:00+07:00') : parsed;
-  }, [settings.eventDate, settings.defaultTime, invitation?.customTime]);
+  const target = useMemo(
+    () => parseCountdownTarget(invitation?.customTime, settings),
+    [invitation?.customTime, settings]
+  );
 
   const [remaining, setRemaining] = useState<TimeRemaining>(() =>
-    calculateRemaining(targetTimestamp)
+    calculateRemaining(target.timestampMs)
   );
 
   useEffect(() => {
-    setRemaining(calculateRemaining(targetTimestamp));
+    setRemaining(calculateRemaining(target.timestampMs));
     const timer = window.setInterval(() => {
-      setRemaining(calculateRemaining(targetTimestamp));
+      setRemaining(calculateRemaining(target.timestampMs));
     }, 1000);
     return () => window.clearInterval(timer);
-  }, [targetTimestamp]);
+  }, [target.timestampMs]);
 
   const pad2 = (n: number) => n.toString().padStart(2, '0');
 
@@ -77,12 +67,17 @@ export function CountdownHud({ settings, invitation }: CountdownHudProps) {
         transition={{ duration: 0.45, delay: 0.16 }}
       >
         {/* CHỈNH TIÊU ĐỀ ĐỒNG HỒ ĐẾM NGƯỢC TẠI ĐÂY */}
-        <div className="mb-3 flex items-center justify-center gap-3">
-          <span className="h-px max-w-[90px] flex-1 bg-gradient-to-r from-transparent to-sky-300/50" />
-          <p className="font-[family-name:var(--font-display)] text-xs font-semibold tracking-[0.2em] text-sky-200/90 uppercase">
-            ĐẾM NGƯỢC ĐẾN GIỜ HẸN
+        <div className="mb-3 flex flex-col items-center gap-1">
+          <div className="flex w-full items-center justify-center gap-3">
+            <span className="h-px max-w-[90px] flex-1 bg-gradient-to-r from-transparent to-sky-300/50" />
+            <p className="font-[family-name:var(--font-display)] text-xs font-semibold tracking-[0.2em] text-sky-200/90 uppercase">
+              ĐẾM NGƯỢC ĐẾN GIỜ HẸN
+            </p>
+            <span className="h-px max-w-[90px] flex-1 bg-gradient-to-l from-transparent to-sky-300/50" />
+          </div>
+          <p className="font-mono text-[11px] sm:text-xs text-sky-300/80 tabular-nums">
+            Mốc hẹn: {target.time24} · {target.formattedDate}
           </p>
-          <span className="h-px max-w-[90px] flex-1 bg-gradient-to-l from-transparent to-sky-300/50" />
         </div>
 
         {remaining.expired ? (
